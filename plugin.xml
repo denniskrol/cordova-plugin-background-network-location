@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-background-network-location"
+        version="0.1.0">
+    <name>CDVBackgroundGeolocation</name>
+    <description>Cordova Background Geolocation Plugin</description>
+    <license>Apache-2.0</license>
+    <keywords>cordova,phonegap,background,geolocation,gps,location</keywords>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0"/>
+    </engines>
+
+    <js-module src="www/backgroundNetworkLocation.js" name="backgroundNetworkLocation">
+        <clobbers target="backgroundNetworkLocation"/>
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <source-file src="src/android/BackgroundNetworkLocation.java" target-dir="src/nl/dannisi/backgroundlocation" />
+        <source-file src="src/android/LoggingService.java" target-dir="src/nl/dannisi/backgroundlocation" />
+        <source-file src="src/android/BootCompletedReceiver.java" target-dir="src/nl/dannisi/backgroundlocation"/>
+        <source-file src="src/android/Config.java" target-dir="src/nl/dannisi/backgroundlocation" />
+        <source-file src="src/android/data/ConfigurationDAO.java" target-dir="src/nl/dannisi/backgroundlocation/data" />
+        <source-file src="src/android/data/DAOFactory.java" target-dir="src/nl/dannisi/backgroundlocation/data" />
+        <source-file src="src/android/data/sqlite/SQLiteConfigurationContract.java" target-dir="src/nl/dannisi/backgroundlocation/data/sqlite" />
+        <source-file src="src/android/data/sqlite/SQLiteConfigurationDAO.java" target-dir="src/nl/dannisi/backgroundlocation/data/sqlite" />
+        <source-file src="src/android/data/sqlite/SQLiteOpenHelper.java" target-dir="src/nl/dannisi/backgroundlocation/data/sqlite" />
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service android:name="nl.dannisi.backgroundlocation.LoggingService" android:enabled="true" android:process=":remote" />
+
+            <receiver
+                android:name="nl.dannisi.backgroundlocation.BootCompletedReceiver"
+                android:enabled="true"
+                android:exported="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+        </config-file>
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BackgroundNetworkLocation">
+                <param name="android-package" value="nl.dannisi.backgroundlocation.BackgroundNetworkLocation"/>
+            </feature>
+        </config-file>
+    </platform>
+</plugin>
